@@ -1,0 +1,19 @@
+{
+  "name": "nahoor",
+  "version": "1.0.0",
+  "description": "nahoor",
+  "main": "server.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shayanthrn/nahoor.git"
+  },
+  "author": "hassan kazemi tehrani",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shayanthrn/nahoor/issues"
+  },
+  "homepage": "https://github.com/shayanthrn/nahoor#readme"
+}

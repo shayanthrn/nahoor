@@ -1,0 +1,40 @@
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.carousel-cell:not(.disabled) {
+  cursor: pointer;
+}
+
+.carousel-cell.active .card {
+  background-color: #06cdd1;
+  color: white !important;
+}
+
+.carousel-cell.disabled .card {
+  background-color: #ddd;
+  color: #555 !important;
+}
+
+.carousel-cell.is-selected {
+  height: 5rem !important;
+}
+
+.line-through {
+  text-decoration: line-through !important;
+}
+
+.text-red {
+  color: #06cdd1;
+}
+
+.bg-red {
+  background-color: #06cdd1;
+}
+
+.reserve-time:hover {
+  border-color: #06cdd1 !important;
+  background-color: #06cdd1 !important;
+  color: white !important;
+}
