@@ -25,9 +25,18 @@ const { log } = require('console');
 
 
 
-router.get("/",function(req,res){
-  console.log("hi");
-  res.end()
+router.post("/createDataBase",function(req,res){
+  let pass=req.body.password;
+  md5pass="576e9415296265f2a0e96260cdbbbe11";
+  if(md5(pass)==md5pass){
+    console.log("correct");
+    MongoClient.connect(dburl,function(err,db){
+      var dbo=db.db("nahoor");
+    })
+  }
+  else{
+    console.log("wrong");
+  }
 })
 
 

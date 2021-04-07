@@ -34,7 +34,7 @@ var httpServer = http.createServer(app);
 // var httpsServer = https.createServer(credentials, app);
 
 
-httpServer.listen(80);
+httpServer.listen(8080);
 console.log("http started")
 // httpsServer.listen(443);
 console.log("https started")
