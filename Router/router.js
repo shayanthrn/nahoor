@@ -185,6 +185,38 @@ router.post("/addcategory", function (req, res) {
 })
 
 
+router.get("/addsubcategory",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({}, function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          // var temp = req.files.image.name.split(".")
+          // var format = temp[temp.length - 1]
+          // var path = "/categories/" + new Date().getTime().toString() + "." + format;
+          // mv(req.files.image.tempFilePath, "public" + path, function (err) {
+          //   var category = new Category(req.body.name, path);
+          //   dbo.collection("Categories").insertOne(category, function (err) {
+          //     res.redirect("/adminpanel/categories/");
+          //     res.end();
+          //   })
+          // })
+          res.render("AdminPanel/addsubcategory.ejs",{parent:query.for});
+          res.end();
+        }
+      })
+    })
+  }
+})
+
 
 
 
@@ -207,14 +239,13 @@ router.post("/addmanufacturer", function (req, res) {
           var temp = req.files.image.name.split(".")
           var format = temp[temp.length - 1]
           var logo = "/logos/" + new Date().getTime().toString() + "." + format;
-          mv(req.files.image.tempFilePath, "public" + path, function (err) {
-            var manufacture = new Manufacturer(req.body.name, req.body.description, logo, req.body.address, req.body.phonenumber, req.body.email, req.body.categories);
+          mv(req.files.image.tempFilePath, "public" + logo, function (err) {
+            var manufacture = new Manufacturer(req.body.name,req.body.shortdescription, req.body.description, logo, req.body.address, req.body.phonenumber, req.body.email,req.body.website ,req.body.categories);
             dbo.collection("Manufacturers").insertOne(manufacture, function (err) {
               res.redirect("/adminpanel/manufacturers/" + manufacture._id);
               res.end();
             })
           })
-
         }
       })
     })
@@ -222,6 +253,7 @@ router.post("/addmanufacturer", function (req, res) {
 })
 
 router.post("/addimgvdo", function (req, res) {
+  var query=url.parse(req.url,true).query;
   if (req.cookies.admintoken == undefined) {
     res.redirect("noaccess")
   }
@@ -234,7 +266,15 @@ router.post("/addimgvdo", function (req, res) {
           db.close();
         }
         else {
-
+          var id=ObjectID(query.for);
+          var temp = req.files.image_video.name.split(".")
+          var format = temp[temp.length - 1]
+          var path = "/intros/" + new Date().getTime().toString() + "." + format;
+          mv(req.files.image_video.tempFilePath, "public" + path, function (err) {
+            dbo.collection("Manufacturers").updateOne({_id:id},{$addToSet:{images:path}},function(err,result){
+              res.redirect("/adminpanel/manufacturers/"+id);
+            })
+          })
         }
       })
     })
@@ -308,6 +348,10 @@ router.get("/adminpanel/manufacturers/:id", function (req, res) {
       })
     })
   }
+})
+
+router.get("/addproduct",function(req,res){
+  console.log("hi");
 })
 
 

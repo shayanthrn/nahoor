@@ -9,7 +9,11 @@
   <meta name="author" content="">
   <title>پنل مدیریت - ناهور </title>
   <link rel="icon" href="assets/img/logo.png">
-
+  <style>
+    .row{
+      margin-top: 10px;
+    }
+  </style>
 
   <title></title>
 
@@ -66,6 +70,14 @@
               </div>
               <div class="row">
                 <div class="col-md-4 col-lg-2">
+                  <h5>توضیحات کوتاه</h5>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                  <%= mfu.shortdescription %>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-lg-2">
                   <h5>توضیحات</h5>
                 </div>
                 <div class="col-md-6 col-lg-6">
@@ -98,9 +110,32 @@
               </div>
               <div class="row">
                 <div class="col-md-4 col-lg-2">
+                  <h5>وب سایت</h5>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                  <%= mfu.website %>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-lg-2">
+                  <h5>اضافه کردن به دسته بندی</h5>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                  <form style="display: -webkit-inline-flex">
+                    <select name="category" class="form-control" style="width: auto;">
+                      <option>
+                        test
+                      </option>
+                    </select>
+                    <button class="btn btn-info" style="margin-right: 5px;" type="submit">تایید</button>
+                  </form>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-lg-2">
                   <h5>آپلود عکس یا فیلم معرفی</h5>
                 </div>
-                <form onsubmit="alert(' محتوی شما با موفقیت اضافه شد.')" action="addimgvdo?for=123" method="POST" enctype="multipart/form-data">
+                <form style="display:-webkit-inline-box" onsubmit="alert(' محتوی شما با موفقیت اضافه شد.')" action="addimgvdo?for=<%= mfu._id %>" method="POST" enctype="multipart/form-data">
                   <div class="col-md-6 col-lg-6">
                     <input type="file" accept="image/*,video/*" class="form-control-file" name="image_video" id="image_video" required>
                   </div>
@@ -109,7 +144,23 @@
               </div>
               <div class="row">
                 <div class="col-md-4 col-lg-2">
-                  <a class="btn btn-info" href="test">اضافه کردن محصول</a>
+                  <a id="mybtn" onclick="func1()" class="btn btn-info" href="dummy">اضافه کردن محصول</a>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                  <select class="form-control" id="category" style="width: auto;">
+                    <% for(let j=0;j<mfu.productscategory.length;j++) {  %>
+                      <option value="<%= mfu.productscategory[j] %>">
+                        <%= mfu.productscategory[j] %>
+                      </option>
+                    <% } %>
+                  </select>
+                  <script>
+                    function func1(){
+                      mylink="addproduct?for=<%=mfu._id%>&cat=";
+                      mylink+=String(document.getElementById("category").value)
+                     document.getElementById("mybtn").setAttribute("href",mylink);
+                    }
+                  </script>
                 </div>
               </div>
             </div>

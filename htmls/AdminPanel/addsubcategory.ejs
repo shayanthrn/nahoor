@@ -43,38 +43,30 @@
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">دسته بندی ها</h1>
           </div>
-
+          <form action="/addsubcategory" onsubmit="alert('دسته بندی شما با موفقیت اضافه شد.')" enctype="multipart/form-data" method="POST">
           <div class="row">
-            <!-- for loop here -->
-            <% for(let i =0;i<categories.length;i++) { %>
-            <div class="col-xl-4 col-sm-6 col-xs-12">
-              <div class="card mb-3">
-                <div class="row no-gutters">
-                  <div class="col-md-4">
-                    <div class="specialty-img" style="background-image: url('<%=categories[i].image%>');">
-                    </div>
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body p-2 h-100 d-flex flex-column justify-content-between">
-                      <h5 class="card-title">
-                       <%=categories[i].name %>
-                      </h5>
-                      <div class="d-flex justify-content-end">
-                        <a class="btn btn-info btn-sm" href="addsubcategory?for=<%=categories[i].name %>">
-                          <i class="fa fa-bars"></i>
-                         اضافه کردن زیر دسته بندی
-                        </a>
-                      </div>
-                    </div>
-                  </div>
+            <div class="col-xl-2 col-lg-6">
+                <div class="form-group">
+                  <label for="image">
+                    تصویر
+                  </label>
+                  <input type="file" accept="image/*" class="form-control-file" name="image" id="image" required>
+                  <label for="parent">
+                    دسته بندی پدر
+                  </label>
+                  <input type="text" value="<%=parent %>" class="form-control" name="parent" id="parent" disabled>
+                  <label for="name">
+                    نام
+                  </label>
+                  <input type="text" class="form-control" name="name" id="name" required>
                 </div>
-              </div>
+                <button type="submit" class="btn btn-success submit-button float-right" id="reserveTimesRequestButton">
+                  <i class="fa fa-check"></i>
+                   اضافه کردن
+                </button>
             </div>
-            <% } %>
-            <!-- end for -->
           </div>
-
-
+          </form>
         </div>
       </main>
       
