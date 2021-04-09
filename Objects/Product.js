@@ -6,6 +6,7 @@ class Product{
         this.category=category;
         this.weight=weight;
         this.countperbox=countperbox;
+        this.features_title="";
         this.features=[];
     }
 }

@@ -15,6 +15,8 @@ var persianDate = require('persian-date');
 var request = require('request');
 var md5 = require('md5');
 var Banner = require("../Objects/Banner.js")
+var Category = require("../Objects/Category.js")
+var Manufacturer = require("../Objects/Manufacturer.js")
 const { ObjectID } = require('mongodb');
 const { debugPort } = require('process');
 const { Buffer } = require('buffer');
@@ -31,38 +33,37 @@ router.post("/createDataBase", function (req, res) {
     req.body.password = "dummy";
   }
   let pass = md5(req.body.password).toString();
-  md5pass = "576e9415296265f2a0e96260cdbbbe11";
+  var md5pass = "576e9415296265f2a0e96260cdbbbe11";
   if (pass == md5pass) {
     MongoClient.connect(dburl, function (err, db) {
       var dbo = db.db("nahoor");
       dbo.collection("Banners").insertOne({ dummy: "dummy" }, function (err) {
-        dbo.collection("Banners").deleteMany({});
+        dbo.collection("Banners").deleteMany({ dummy: "dummy" });
       });
       dbo.collection("Categories").insertOne({ dummy: "dummy" }, function (err) {
-        dbo.collection("Categories").deleteMany({});
+        dbo.collection("Categories").deleteMany({ dummy: "dummy" });
       });
       dbo.collection("Manufacturers").insertOne({ dummy: "dummy" }, function (err) {
-        dbo.collection("Manufacturers").deleteMany({});
+        dbo.collection("Manufacturers").deleteMany({ dummy: "dummy" });
       });
       dbo.collection("Orders").insertOne({ dummy: "dummy" }, function (err) {
-        dbo.collection("Orders").deleteMany({});
+        dbo.collection("Orders").deleteMany({ dummy: "dummy" });
       });
       dbo.collection("Products").insertOne({ dummy: "dummy" }, function (err) {
-        dbo.collection("Products").deleteMany({});
+        dbo.collection("Products").deleteMany({ dummy: "dummy" });
       });
       dbo.collection("SubCategories").insertOne({ dummy: "dummy" }, function (err) {
-        dbo.collection("SubCategories").deleteMany({});
+        dbo.collection("SubCategories").deleteMany({ dummy: "dummy" });
       });
       dbo.collection("SubCategories").insertOne({ dummy: "dummy" }, function (err) {
-        dbo.collection("SubCategories").deleteMany({});
+        dbo.collection("SubCategories").deleteMany({ dummy: "dummy" });
       });
       dbo.collection("Users").insertOne({ dummy: "dummy" }, function (err) {
-        dbo.collection("Users").deleteMany({});
+        dbo.collection("Users").deleteMany({ dummy: "dummy" });
       });
       dbo.collection("Admin").insertOne({ user: "admin", password: "458d523af85e1779931973d13a1b3795", token: "" });
       console.log("db created!");
       res.end();
-      db.close();
     })
   }
   else {
@@ -121,6 +122,212 @@ router.get("/adminpanel/dashboard", function (req, res) {
     })
   }
 })
+
+
+router.post("/addbanner", function (req, res) {
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({}, function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var temp = req.files.image.name.split(".")
+          var format = temp[temp.length - 1]
+          var path = "/banners/" + new Date().getTime().toString() + "." + format;
+          mv(req.files.image.tempFilePath, "public" + path, function (err) {
+            var bannerobj = new Banner(req.body.description, path);
+            dbo.collection("Banners").insertOne(bannerobj, function (err) {
+              res.redirect("/adminpanel/dashboard");
+              res.end();
+            })
+          })
+        }
+      })
+    })
+  }
+})
+
+
+
+router.post("/addcategory", function (req, res) {
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({}, function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var temp = req.files.image.name.split(".")
+          var format = temp[temp.length - 1]
+          var path = "/categories/" + new Date().getTime().toString() + "." + format;
+          mv(req.files.image.tempFilePath, "public" + path, function (err) {
+            var category = new Category(req.body.name, path);
+            dbo.collection("Categories").insertOne(category, function (err) {
+              res.redirect("/adminpanel/categories/");
+              res.end();
+            })
+          })
+        }
+      })
+    })
+  }
+})
+
+
+
+
+
+router.post("/addmanufacturer", function (req, res) {
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({}, function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          if (typeof req.body.categories == "string") {
+            req.body.categories = [req.body.categories]
+          }
+          var temp = req.files.image.name.split(".")
+          var format = temp[temp.length - 1]
+          var logo = "/logos/" + new Date().getTime().toString() + "." + format;
+          mv(req.files.image.tempFilePath, "public" + path, function (err) {
+            var manufacture = new Manufacturer(req.body.name, req.body.description, logo, req.body.address, req.body.phonenumber, req.body.email, req.body.categories);
+            dbo.collection("Manufacturers").insertOne(manufacture, function (err) {
+              res.redirect("/adminpanel/manufacturers/" + manufacture._id);
+              res.end();
+            })
+          })
+
+        }
+      })
+    })
+  }
+})
+
+router.post("/addimgvdo", function (req, res) {
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({}, function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+
+        }
+      })
+    })
+  }
+})
+
+
+router.get("/adminpanel/categories/", function (req, res) {
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({}, async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var categories = await dbo.collection("Categories").find({}).toArray();
+          res.render("AdminPanel/categories.ejs", { categories: categories });
+          res.end();
+        }
+      })
+    })
+  }
+})
+
+router.get("/adminpanel/manufacturers/", function (req, res) {
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({}, async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var manufacturers = await dbo.collection("Manufacturers").find({}).toArray();
+          res.render("AdminPanel/manufacturers.ejs", { manufacturers: manufacturers });
+          res.end();
+        }
+      })
+    })
+  }
+})
+
+router.get("/adminpanel/manufacturers/:id", function (req, res) {
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({}, function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id = ObjectID(req.params.id);
+          dbo.collection("Manufacturers").findOne({ _id: id }, function (err, mfu) {
+            res.render("AdminPanel/manufacturer-page.ejs", { mfu: mfu });
+            res.end();
+          })
+        }
+      })
+    })
+  }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 router.get('/exit', function (req, res) {

@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html dir="rtl" class="fa-events-icons-ready" lang="en"><head>
+  <meta charset="utf-8">
+  <base id="base">
+  <script src="/assets/js/config.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>پنل مدیریت - ناهور </title>
+  <link rel="icon" href="assets/img/logo.png">
+
+
+  <title></title>
+
+  <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.1.3/css/bootstrap.min.css" integrity="sha384-Jt6Tol1A2P9JBesGeCxNrxkmRFSjWCBW1Af7CSQSKsfMVQCqnUVWhZzG0puJMCK6" crossorigin="anonymous">
+  <link href="assets/panelassests/dashboard.rtl.css" rel="stylesheet">
+  <script src="https://use.fontawesome.com/6d68f18b97.js"></script><link href="https://use.fontawesome.com/6d68f18b97.css" media="all" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@latest/dist/css/persian-datepicker.min.css">
+  <link href="assets/css/main.css" rel="stylesheet" />
+  
+</head>
+
+<body>
+
+  <nav class="navbar fixed-top navbar-expand-lg nav-dark">
+    <a class="navbar-brand mr-2" style="color: white;">  ناهور</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo" aria-controls="navbarTogglerDemo" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fa fa-bars menu-icon"></i>
+    </button>
+
+  </nav>
+  
+
+  <div class="container-fluid">
+    <div class="row">
+      
+      <%- include('navbar.ejs',{flag:"manufacturers"}); -%>
+      
+      <main role="main" class=" ml-sm-auto col-lg-9 col-xl-10 px-4" id="doctors-profile">
+        <div class="container-fluid">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">پروفایل کارخانه</h1>
+            <button class="btn btn-info" onclick="goBack()">بازگشت به صفحه قبل</button>
+
+            <script>
+            function goBack() {
+              window.history.back();
+            }
+            </script>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6 col-md-2 mb-5">
+              <img class="img-fluid" src="<%=mfu.logo%>" onerror="this.src='assets/img/logo.png'">
+            </div>
+            <div class="col-sm-12 col-md-10">
+              <div class="row">
+                <div class="col-md-4 col-lg-2">
+                  <h5>نام</h5>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                <%= mfu.name %>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-lg-2">
+                  <h5>توضیحات</h5>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                  <%= mfu.description %>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-lg-2">
+                  <h5> آدرس</h5>
+                </div>  
+                <div class="col-md-6 col-lg-6">
+                  <%= mfu.address %>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-lg-2">
+                  <h5>شماره تماس</h5>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                  <%= mfu.phonenumber %>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-lg-2">
+                  <h5>ایمیل</h5>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                  <%= mfu.email %>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-lg-2">
+                  <h5>آپلود عکس یا فیلم معرفی</h5>
+                </div>
+                <form onsubmit="alert(' محتوی شما با موفقیت اضافه شد.')" action="addimgvdo?for=123" method="POST" enctype="multipart/form-data">
+                  <div class="col-md-6 col-lg-6">
+                    <input type="file" accept="image/*,video/*" class="form-control-file" name="image_video" id="image_video" required>
+                  </div>
+                  <button class="btn btn-info" type="submit" >آپلود</button>
+                </form>
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-lg-2">
+                  <a class="btn btn-info" href="test">اضافه کردن محصول</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      
+    </div>
+  </div>
+  
+
+
+  
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="assets/panelassests/jquery-slim.min.js"><\/script>')</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://cdn.rtlcss.com/bootstrap/v4.1.3/js/bootstrap.min.js" integrity="sha384-C/pvytx0t5v9BEbkMlBAGSPnI1TQU1IrTJ6DJbC8GBHqdMnChcb6U4xg4uRkIQCV" crossorigin="anonymous"></script>
+
+  <script src="https://unpkg.com/persian-date@latest/dist/persian-date.min.js"></script>
+  <script src="https://unpkg.com/persian-datepicker@latest/dist/js/persian-datepicker.min.js"></script>
+
+</body>
+
+</html>

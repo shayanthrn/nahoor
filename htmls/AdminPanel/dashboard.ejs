@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <title>پنل مدیریت - ناهور </title>
-  <link rel="icon" href="favicon.ico">
+  <link rel="icon" href="assets/img/logo.png">
 
 
   <title></title>
@@ -24,7 +24,7 @@
 <body>
 
   <nav class="navbar fixed-top navbar-expand-lg nav-dark">
-    <a class="navbar-brand mr-2" style="color: white;"> دکتر تجویز</a>
+    <a class="navbar-brand mr-2" style="color: white;">  ناهور</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo" aria-controls="navbarTogglerDemo" aria-expanded="false" aria-label="Toggle navigation">
       <i class="fa fa-bars menu-icon"></i>
     </button>
@@ -35,69 +35,169 @@
   <div class="container-fluid">
     <div class="row">
       
-      <%- include('navbar.ejs',{flag:1}); -%>
+      <%- include('navbar.ejs',{flag:"dashboard"}); -%>
       
       <main role="main" class=" ml-sm-auto col-lg-9 col-xl-10 px-4" id="reserve-list">
         <div class="container-fluid">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">جستجوی تایم های رزرو شده</h1>
+            <h1 class="h2">اضافه کردن بنر در صفحه اصلی</h1>
           </div>
-          <form autocomplete="off" action="/AdminPanel/dashboard" method="POST">
+          <form action="/addbanner" onsubmit="alert('بنر شما با موفقیت اضافه شد.')" enctype="multipart/form-data" method="POST">
           <div class='row'>
             <div class="col-xl-2 col-lg-6">
               <div class="form-group">
-                <label for="type">انتخاب  دسته بندی   </label>
-                <select class="form-control" id="type" name="type" onchange="changetype()" required>
-                  <option disabled selected>---انتخاب ---</option>
-                  <option value="doctor">دکتر ها</option>
-                  <option value="HC">مراکز درمانی</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-xl-2 col-lg-6">
-              <div class="form-group">
-                <label for="type-list">انتخاب دکتر یا مرکز  </label>
-                <select class="form-control" id="type-list" name="name" required>
-                  <option disabled selected>---انتخاب ---</option>
-                  
-                </select>
-              </div>
-            </div>
-            <div class="col-xl-2 col-lg-6">
-              <div class="form-group">
-                <label for="datePicker">
-                  تاریخ
+                <label for="image">
+                  تصویر
                 </label>
-                <input type="text" class="form-control datePicker" id="datePicker" />
-                <input type="text" class="form-control datePicker" name="datePicker" id="datePickerTimeStamp"  hidden/>
-                <p>در صورت تمایل برای دریافت تمام رزرو ها این قسمت را خالی بگذارید</p>
+                <input type="file" accept="image/*" class="form-control-file" name="image" id="image" required>
+                <label for="description">
+                  توضیحات
+                </label>
+                <textarea class="form-control" name="description" id="description" required></textarea>
               </div>
-              <button type="submit" class="btn btn-success submit-button float-right" id="reserveTimesRequestButton">
+              <button type="submit"  class="btn btn-success submit-button float-right" id="reserveTimesRequestButton">
                 <i class="fa fa-check"></i>
-                 نمایش
+                 اضافه کردن
               </button>
             </div>
           </div>
           </form>
 
+
+
+
+
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">لیست رزرو ها</h1>
+            <h1 class="h2">اضافه کردن دسته بندی</h1>
           </div>
           
 
-          <div class="row">
-            <div class="col">
-              <div class="table-responsive">
+          <form action="/addcategory" onsubmit="alert('دسته بندی شما با موفقیت اضافه شد.')" enctype="multipart/form-data" method="POST">
+          <div class='row'>
+            <div class="col-xl-2 col-lg-6">
+              <div class="form-group">
+                <label for="image">
+                  تصویر
+                </label>
+                <input type="file" accept="image/*" class="form-control-file" name="image" id="image" required>
+                <label for="name">
+                  نام
+                </label>
+                <input type="text" class="form-control" name="name" id="name" required>
               </div>
+              <button type="submit" class="btn btn-success submit-button float-right" id="reserveTimesRequestButton">
+                <i class="fa fa-check"></i>
+                 اضافه کردن
+              </button>
             </div>
           </div>
+          </form>
+
+
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">اضافه کردن کارخانه</h1>
+          </div>
+          
+
+          <form action="/addmanufacturer" enctype="multipart/form-data" method="POST">
+          <div class='row'>
+            <div class="col-xl-2 col-lg-6">
+              <div class="form-group">
+                <label for="image">
+                  لوگو
+                </label>
+                <input type="file" accept="image/*" class="form-control-file" name="image" id="image" required>
+                <label for="name">
+                  نام
+                </label>
+                <input type="text" class="form-control" name="name" id="name">
+                <label for="phonenumber">
+                  تلفن
+                </label>
+                <input type="text" class="form-control" name="phonenumber" id="phonenumber">
+                <label for="email">
+                  ایمیل
+                </label>
+                <input type="email" class="form-control" name="email" id="email">
+                <label for="description">
+                  توضیحات
+                </label>
+                <textarea class="form-control" name="description" id="description"></textarea>
+                <label for="address">
+                  آدرس
+                </label>
+                <textarea class="form-control" name="address" id="address"></textarea>
+                <div class="row">
+                  <div class="col-md-6 col-lg-6">
+                    <div class="form-group mb-2 checkbox-groupp required">
+                      <div id="myDIV" class="header">
+                        <label for="myInput">
+                          دسته بندی محصولات
+                        </label>
+                        <input oninput="checkdatalist()" list="mylist" id="myInput" placeholder="دسته بندی">
+                        <datalist id="mylist">
+                        </datalist>
+                        <button type="button" onclick="newElement()" id="addcat" class="addBtn btn btn-danger">اضافه</button>
+                        <ul id="myUL" style="display: inline-grid;">
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success submit-button float-right" id="reserveTimesRequestButton">
+                <i class="fa fa-check"></i>
+                 اضافه کردن
+              </button>
+            </div>
+          </div>
+          </form>
+
+
         </div>
       </main>
       
     </div>
   </div>
   
-
+  <script>
+    function newElement() {
+      var li = document.createElement("li");
+      var input = document.createElement("input");
+      var inputValue = document.getElementById("myInput").value;
+      var t = document.createTextNode(inputValue);
+      input.value=inputValue;
+      input.type="checkbox";
+      input.checked=true;
+      input.name="categories";
+      input.style.visibility="hidden";
+      li.className="checklist";
+      li.style.listStyle="none";
+      li.appendChild(t);
+      li.appendChild(input);
+      if (inputValue === '') {
+        alert("دسته بندی وارد شده معتبر نیست");
+      } else {
+        document.getElementById("myUL").appendChild(li);
+      }
+      document.getElementById("myInput").value = "";
+    
+      var span = document.createElement("SPAN");
+      var txt = document.createTextNode("\u00D7");
+      span.className = "close";
+      span.appendChild(txt);
+      li.appendChild(span);
+    
+      var close = document.getElementsByClassName("close");
+      for (i = 0; i < close.length; i++) {
+        close[i].onclick = function() {
+          var div = this.parentElement;
+          this.parentElement.remove();
+        }
+      }
+    }
+  
+    </script>
 
   
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
