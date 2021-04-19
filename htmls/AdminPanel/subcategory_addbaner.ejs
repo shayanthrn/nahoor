@@ -40,30 +40,28 @@
       
       <main role="main" class=" ml-sm-auto col-lg-9 col-xl-10 px-4" id="specialties">
         <div class="container-fluid">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">دسته بندی ها</h1>
-          </div>
-          <form action="/addsubcategory" onsubmit="alert('دسته  شما با موفقیت اضافه شد.')" enctype="multipart/form-data" method="POST">
-          <div class="row">
-            <div class="col-xl-2 col-lg-6">
-                <div class="form-group">
-                  <label for="image">
-                    تصویر
-                  </label>
-                  <input type="file" accept="image/*" class="form-control-file" name="image" id="image" required>
-                  <input type="text" value="<%=parent %>" class="form-control" name="parent" id="parent" hidden>
-                  <label for="name">
-                    نام
-                  </label>
-                  <input type="text" class="form-control" name="name" id="name" required>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2"> اضافه کردن بنر</h1>
+              </div>
+              <form action="/addimgsubcategory" onsubmit="alert(' بنر شما با موفقیت اضافه شد.')" enctype="multipart/form-data" method="POST">
+              <div class="row">
+                <div class="col-xl-2 col-lg-6">
+                    <div class="form-group">
+                      <label for="image">
+                        بنر
+                      </label>
+                      <input type="file" accept="image/*" class="form-control-file" name="image" id="image" required>
+                      <input type="text" value="<%=id%>" name="id" id="id" hidden>
+                    </div>
+                    <button type="submit" class="btn btn-success submit-button float-right" id="reserveTimesRequestButton">
+                      <i class="fa fa-check"></i>
+                       اضافه کردن
+                    </button>
                 </div>
-                <button type="submit" class="btn btn-success submit-button float-right" id="reserveTimesRequestButton">
-                  <i class="fa fa-check"></i>
-                   اضافه کردن
-                </button>
-            </div>
-          </div>
-          </form>
+              </div>
+              </form>
+
+
         </div>
       </main>
       

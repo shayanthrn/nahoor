@@ -121,11 +121,13 @@
                   <h5>اضافه کردن به دسته بندی</h5>
                 </div>
                 <div class="col-md-6 col-lg-6">
-                  <form style="display: -webkit-inline-flex">
+                  <form action="/addmftosubcat?for=<%=mfu._id %>" method="POST" onsubmit="alert(' کارخانه شما با موفقیت اضافه شد.')"  style="display: -webkit-inline-flex">
                     <select name="category" class="form-control" style="width: auto;">
-                      <option>
-                        test
+                      <% for(let i = 0 ; i < subcats.length ; i++){ %>
+                      <option value="<%= subcats[i].name%>">
+                        <%= subcats[i].name%>
                       </option>
+                      <% } %>
                     </select>
                     <button class="btn btn-info" style="margin-right: 5px;" type="submit">تایید</button>
                   </form>
@@ -140,6 +142,17 @@
                     <input type="file" accept="image/*,video/*" class="form-control-file" name="image_video" id="image_video" required>
                   </div>
                   <button class="btn btn-info" type="submit" >آپلود</button>
+                </form>
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-lg-2">
+                  <h5>تنظیم امتیاز</h5>
+                </div>
+                <form style="display:-webkit-inline-box" onsubmit="alert(' امتیاز شما با موفقیت ثبت شد.')" action="setrate?for=<%= mfu._id %>" method="POST" >
+                  <div class="col-md-6 col-lg-6">
+                    <input type="text" class="form-control-file" name="rate" id="rate" required>
+                  </div>
+                  <button class="btn btn-info" type="submit" >ثبت</button>
                 </form>
               </div>
               <div class="row">

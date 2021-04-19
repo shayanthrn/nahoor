@@ -1,5 +1,6 @@
 class SubCategory{
-    constructor(parentname,path){
+    constructor(name,parentname,path){
+        this.name=name;
         this.parentname=parentname;
         this.image=path;
         this.banners=[]

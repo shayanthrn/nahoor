@@ -11,6 +11,7 @@ class Manufacturer{
         this.website=website;
         this.productscategory=listofcats;
         this.categories=[];
+        this.rate=0;
     }
 }
 
