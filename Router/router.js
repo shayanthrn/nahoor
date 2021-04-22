@@ -19,6 +19,8 @@ var Category = require("../Objects/Category.js")
 var Manufacturer = require("../Objects/Manufacturer.js")
 var SubCategory = require("../Objects/SubCategory.js")
 var Product = require("../Objects/Product.js");
+var User = require("../Objects/User.js");
+var Order =require("../Objects/Order.js")
 const { ObjectID } = require('mongodb');
 const { debugPort } = require('process');
 const { Buffer } = require('buffer');
@@ -197,6 +199,24 @@ router.get("/api/getfactoryproducts",function(req,res){
   }
 })
 
+router.get("/api/getfactoryproductsbycategory",function(req,res){
+  var query=url.parse(req.url,true).query;
+  var secret = new Date().getDate();
+  secret=md5(secret.toString())
+  if(query.secret==secret){
+    MongoClient.connect(dburl,async function(err,db){
+      var dbo=db.db("nahoor");
+      products=await dbo.collection("Products").find({manufacturer:query.id,category:query.category}).toArray();
+      res.json({"response":products});
+      res.end();
+    })
+  }
+  else{
+    res.json({"response":"noaccess"});
+    res.end();
+  }
+})
+
 router.get("/api/getproduct",function(req,res){
   var query=url.parse(req.url,true).query;
   var secret = new Date().getDate();
@@ -207,6 +227,131 @@ router.get("/api/getproduct",function(req,res){
       var id=ObjectID(query.id)
       product=await dbo.collection("Products").findOne({_id:id});
       res.json({"response":product});
+      res.end();
+    })
+  }
+  else{
+    res.json({"response":"noaccess"});
+    res.end();
+  }
+})
+
+router.post("/api/signupuser",function(req,res){
+  var query=url.parse(req.url,true).query;
+  var secret = new Date().getDate();
+  secret=md5(secret.toString())
+  if(query.secret==secret){
+    MongoClient.connect(dburl,async function(err,db){
+      var dbo=db.db("nahoor");
+      var user=new User(req.body.name,req.body.password,req.body.phonenumber,req.body.address);
+      dbo.collection("Users").insertOne(user);
+      res.json({"response":"ok"});
+      res.end();
+    })
+  }
+  else{
+    res.json({"response":"noaccess"});
+    res.end();
+  }
+})
+
+router.get("/api/login",function(req,res){
+  var query=url.parse(req.url,true).query;
+  var secret = new Date().getDate();
+  secret=md5(secret.toString())
+  if(query.secret==secret){
+    MongoClient.connect(dburl,async function(err,db){
+      var dbo=db.db("nahoor");
+      dbo.collection("Users").findOne({phonenumber:req.body.phonenumber},function(err,user){
+        if(user==null){
+          res.json({"response":"not found"});
+        }
+        else{
+          if(user.password==req.body.password){
+            res.json({"response":user._id});
+          }
+          else{
+            res.json({"response":"wrong pass"});
+          }
+        }
+        res.end();
+      })
+    })
+  }
+  else{
+    res.json({"response":"noaccess"});
+    res.end();
+  }
+})
+
+router.get("/api/getuserinfo",function(req,res){
+  var query=url.parse(req.url,true).query;
+  var secret = new Date().getDate();
+  secret=md5(secret.toString())
+  if(query.secret==secret){
+    MongoClient.connect(dburl,async function(err,db){
+      var dbo=db.db("nahoor");
+      var id=ObjectID(query.id)
+      dbo.collection("Users").findOne({_id:id},function(err,user){
+        res.json({"response":user});
+        res.end();
+      })
+    })
+  }
+  else{
+    res.json({"response":"noaccess"});
+    res.end();
+  }
+})
+
+
+router.post("/api/submitorder",function(req,res){
+  var query=url.parse(req.url,true).query;
+  var secret = new Date().getDate();
+  secret=md5(secret.toString())
+  if(query.secret==secret){
+    MongoClient.connect(dburl,async function(err,db){
+      var dbo=db.db("nahoor");
+      var order=new Order(req.body.phonenumber,req.body.listofproducts,req.body.totalcost,req.body.manufacturer);
+      dbo.collection("Orders").insertOne(order);
+      res.json({"response":"ok"});
+      res.end();
+    })
+  }
+  else{
+    res.json({"response":"noaccess"});
+    res.end();
+  }
+})
+
+router.get("/api/getorders",function(req,res){
+  var query=url.parse(req.url,true).query;
+  var secret = new Date().getDate();
+  secret=md5(secret.toString())
+  if(query.secret==secret){
+    MongoClient.connect(dburl,async function(err,db){
+      var dbo=db.db("nahoor");
+      orders=await dbo.collection("Orders").find({userphonenumber:query.phonenumber}).toArray()
+      res.json({"response":orders});
+      res.end();
+    })
+  }
+  else{
+    res.json({"response":"noaccess"});
+    res.end();
+  }
+})
+
+router.post("/api/editinfo",function(req,res){
+  var query=url.parse(req.url,true).query;
+  var secret = new Date().getDate();
+  secret=md5(secret.toString())
+  if(query.secret==secret){
+    MongoClient.connect(dburl,async function(err,db){
+      var dbo=db.db("nahoor");
+      var id=ObjectID(req.body.id);
+      dbo.collection("Users").updateOne({_id:id},{$set:{name:req.body.name,phonenumber:req.body.phonenumber,address:req.body.address,password:req.body.password}});
+      res.json({"response":"ok"});
       res.end();
     })
   }

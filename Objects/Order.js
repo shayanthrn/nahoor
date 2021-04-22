@@ -1,8 +1,9 @@
 class Order{
-    constructor(userphonenumber){
+    constructor(userphonenumber,listoforders,totalcost,manufacturer){
         this.userphonenumber=userphonenumber;
-        this.listoforders=[];
-        this.totalcost=0;
+        this.manufacturer=manufacturer;
+        this.listoforders=listoforders;
+        this.totalcost=totalcost;
         this.status="paymentpending"
     }
 }
