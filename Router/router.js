@@ -580,13 +580,15 @@ router.get("/adminpanel/subcategories/addimg/:id",function(req,res){
   else {
     MongoClient.connect(dburl, function (err, db) {
       var dbo = db.db("nahoor");
-      dbo.collection("Admin").findOne({}, function (err, admin) {
+      dbo.collection("Admin").findOne({},async function (err, admin) {
         if (admin.token != req.cookies.admintoken) {
           res.redirect("noaccess");
           db.close();
         }
         else {
-          res.render("AdminPanel/subcategory_addbaner.ejs",{id:req.params.id})
+          var id=ObjectID(req.params.id);
+          subcat=await dbo.collection("SubCategories").findOne({_id:id})
+          res.render("AdminPanel/subcategory_addbaner.ejs",{id:req.params.id,banners:subcat.banners})
           res.end();
         }
       })
@@ -672,7 +674,7 @@ router.post("/addproduct",function(req,res){
             else{
               features=req.body.features;
             }
-            var product= new Product(req.body.name,req.body.priceT,req.body.priceA,query.category,req.body.weight,req.body.countperbox,query.for,req.body.features_title,features);
+            var product= new Product(req.body.name,req.body.priceT,req.body.priceA,query.category,req.body.weight,req.body.countperbox,query.for,req.body.features_title,features,logo);
             dbo.collection("Products").insertOne(product,function(err,result){
               res.redirect("/adminpanel/manufacturers/"+query.for);
             })
@@ -879,17 +881,296 @@ router.post("/addmftosubcat",function(req,res){
 
 
 
+router.get("/adminpanel/banners",function(req,res){
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          banners= await dbo.collection("Banners").find({}).toArray()
+          res.render("AdminPanel/banners.ejs",{banners:banners});
+          res.end();
+        }
+      })
+    })
+  }
+})
+
+router.get("/removebanner",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id=ObjectID(query.id);
+          dbo.collection("Banners").findOneAndDelete({_id:id},function(err,banner){
+            fs.unlink("public"+banner.value.image, function (err) {
+              res.redirect("/adminpanel/banners");
+              db.close();
+            })
+          })
+        }
+      })
+    })
+  }
+})
+
+
+router.get("/removecategory",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          dbo.collection("Categories").findOneAndDelete({name:query.for},function(err,cat){
+            dbo.collection("SubCategories").deleteMany({parentname:cat.value.name});
+            fs.unlink("public"+cat.value.image, function (err) {
+              res.redirect("/adminpanel/categories");
+              db.close();
+            })
+          })
+        }
+      })
+    })
+  }
+})
+
+router.get("/subcategories",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          subcategories=await dbo.collection("SubCategories").find({parentname:query.for}).toArray()
+          res.render("AdminPanel/subcategories.ejs",{categories:subcategories,parent:query.for});
+          res.end();
+        }
+      })
+    })
+  }
+})
+
+router.get("/removesubcategorybanner",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id=ObjectID(query.id);
+          dbo.collection("SubCategories").updateOne({_id:id},{$pull:{banners:query.name}});
+          fs.unlink("public/"+query.name,function(err){
+            res.redirect("/adminpanel/subcategories/addimg/"+id)
+          })
+        }
+      })
+    })
+  }
+})
+
+router.get("/removesubcategory",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          dbo.collection("SubCategories").findOneAndDelete({name:query.for},function(err,subcat){
+            for(let i=0;i<subcat.value.banners.length;i++){
+              fs.unlink("public/"+subcat.value.banners[i],function(err){
+                console.log("hi");
+              })
+            }
+            res.redirect("/adminpanel/categories")
+          })          
+        }
+      })
+    })
+  }
+})
+
+
+router.get("/intros",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id=ObjectID(query.id);
+          dbo.collection("Manufacturers").findOne({_id:id},function(err,mfu){
+            intros=mfu.images;
+            res.render("AdminPanel/intros.ejs",{intros:intros,id:mfu._id});
+            res.end();
+          })   
+        }
+      })
+    })
+  }
+})
+
+
+router.get("/removeintro",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id=ObjectID(query.id);
+          dbo.collection("Manufacturers").updateOne({_id:id},{$pull:{images:query.name}});
+          fs.unlink("public/"+query.name,function(err){
+            res.redirect("/intros?id="+id)
+          })
+        }
+      })
+    })
+  }
+})
+
+
+router.get("/products",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          products=await dbo.collection("Products").find({manufacturer:query.id}).toArray()  
+          res.render("AdminPanel/products.ejs");
+          res.end(); 
+        }
+      })
+    })
+  }
+})
+
+router.get("/removeproduct",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id=ObjectID(query.id);
+          dbo.collection("Products").findOneAndDelete({_id:id},function(err,pd){
+            product=pd.value;
+            fs.unlink("public"+product.image,function(err){
+              res.redirect("/products/?id="+product.manufacturer)
+            })
+          });
+        }
+      })
+    })
+  }
+})
 
 
 
-
-
-
-
-
-
-
-
+router.get("/removemanufacturer",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id=ObjectID(query.id);
+          dbo.collection("Manufacturers").findOneAndDelete({_id:id},function(err,mfu){
+            mf=mfu.value;
+            fs.unlink("public"+mf.logo,function(err){
+              for(let i =0 ; i<mf.images.length;i++){
+                fs.unlink("public"+mf.images[i],function(err){
+                  console.log("hi");
+                })
+              }
+            })
+            res.redirect("/adminpanel/manufacturers")
+          });
+        }
+      })
+    })
+  }
+})
 
 
 

@@ -40,43 +40,38 @@
       
       <main role="main" class=" ml-sm-auto col-lg-9 col-xl-10 px-4" id="specialties">
         <div class="container-fluid">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">کارخانه ها</h1>
-          </div>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">  عکس ها</h1>
+              </div>
 
-          <div class="row">
-            <!-- for loop here -->
-            <% for(let i =0;i<manufacturers.length;i++) { %>
-            <div class="col-xl-4 col-sm-6 col-xs-12">
-              <div class="card mb-3">
-                <div class="row no-gutters">
-                  <div class="col-md-4">
-                    <div class="specialty-img" style="background-image: url('<%=manufacturers[i].logo%>');">
-                    </div>
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body p-2 h-100 d-flex flex-column justify-content-between">
-                      <h5 class="card-title">
-                       <%=manufacturers[i].name %>
-                      </h5>
-                      <div class="d-flex justify-content-end">
-                        <a class="btn btn-info btn-sm" href="/adminpanel/manufacturers/<%=manufacturers[i]._id%>">
-                          <i class="fa fa-bars"></i>
-                         جزئیات
-                        </a>
-                        <a class="btn btn-danger btn-sm" href="/removemanufacturer?id=<%=manufacturers[i]._id%>">
-                         حذف
-                        </a>
+              <div style="margin-top: 20px;" class="row">
+                <!-- for loop here -->
+                <% for(let i =0;i<intros.length;i++) { %>
+                <div class="col-xl-4 col-sm-6 col-xs-12">
+                  <div class="card mb-3">
+                    <div class="row no-gutters">
+                      <div class="col-md-4">
+                        <div class="specialty-img" style="background-image: url('<%=intros[i]%>');">
+                        </div>
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body p-2 h-100 d-flex flex-column justify-content-between">
+                          <h5 class="card-title">
+                           <%= i+1 %>
+                          </h5>
+                          <div class="d-flex justify-content-end">
+                            <a class="btn btn-danger" href="/removeintro?name=<%=intros[i] %>&id=<%= id%>">
+                             حذف
+                            </a>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <% } %>
+                <!-- end for -->
               </div>
-            </div>
-            <% } %>
-            <!-- end for -->
-          </div>
-
 
         </div>
       </main>

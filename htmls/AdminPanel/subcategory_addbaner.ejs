@@ -61,6 +61,34 @@
               </div>
               </form>
 
+              <div style="margin-top: 20px;" class="row">
+                <!-- for loop here -->
+                <% for(let i =0;i<banners.length;i++) { %>
+                <div class="col-xl-4 col-sm-6 col-xs-12">
+                  <div class="card mb-3">
+                    <div class="row no-gutters">
+                      <div class="col-md-4">
+                        <div class="specialty-img" style="background-image: url('<%=banners[i]%>');">
+                        </div>
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body p-2 h-100 d-flex flex-column justify-content-between">
+                          <h5 class="card-title">
+                           <%= i+1 %>
+                          </h5>
+                          <div class="d-flex justify-content-end">
+                            <a class="btn btn-danger" href="/removesubcategorybanner?name=<%=banners[i] %>&id=<%= id%>">
+                             حذف
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <% } %>
+                <!-- end for -->
+              </div>
 
         </div>
       </main>

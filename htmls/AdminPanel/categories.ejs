@@ -60,9 +60,12 @@
                        <%=categories[i].name %>
                       </h5>
                       <div class="d-flex justify-content-end">
-                        <a class="btn btn-info btn-sm" href="addsubcategory?for=<%=categories[i].name %>">
+                        <a class="btn btn-info btn-sm" href="/subcategories?for=<%=categories[i].name %>">
                           <i class="fa fa-bars"></i>
-                         اضافه کردن زیر دسته بندی
+                          زیر دسته بندی ها
+                        </a>
+                        <a class="btn btn-danger" href="/removecategory?for=<%=categories[i].name %>">
+                         حذف
                         </a>
                       </div>
                     </div>
