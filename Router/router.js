@@ -263,12 +263,12 @@ router.get("/api/login",function(req,res){
   if(query.secret==secret){
     MongoClient.connect(dburl,async function(err,db){
       var dbo=db.db("nahoor");
-      dbo.collection("Users").findOne({phonenumber:req.body.phonenumber},function(err,user){
+      dbo.collection("Users").findOne({phonenumber:query.phonenumber},function(err,user){
         if(user==null){
           res.json({"response":"not found"});
         }
         else{
-          if(user.password==req.body.password){
+          if(user.password==query.password){
             res.json({"response":user._id});
           }
           else{
