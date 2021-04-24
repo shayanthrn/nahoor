@@ -46,8 +46,8 @@
         <div class="container-fluid">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">پروفایل کارخانه</h1>
+            <a class="btn btn-info" href="/editinfo?id=<%=mfu._id%>">ویرایش</a>
             <button class="btn btn-info" onclick="goBack()">بازگشت به صفحه قبل</button>
-
             <script>
             function goBack() {
               window.history.back();
@@ -58,6 +58,10 @@
           <div class="row">
             <div class="col-sm-6 col-md-2 mb-5">
               <img class="img-fluid" src="<%=mfu.logo%>" onerror="this.src='assets/img/logo.png'">
+              <form method="POST" enctype="multipart/form-data" action="/changelogo?id=<%=mfu._id %>">
+                <input name="image" accept="image/jpeg,image/png" type="file">
+                <button class="btn btn-info" type="submit">تغییر</button>
+              </form>
             </div>
             <div class="col-sm-12 col-md-10">
               <div class="row">
@@ -134,12 +138,19 @@
                 </div>
               </div>
               <div class="row">
+                <div style="display: inline-grid;" class="col-md-4 col-lg-2">
+                  <% for(let i =0 ; i < mfu.categories.length; i++) { %>
+                  <li class="checklist" style="list-style: none;"><%= mfu.categories[i] %><a href="/removecatfrommfu?name=<%=mfu.categories[i]%>&id=<%=mfu._id%>" class="close">×</a></li>
+                  <% } %>
+                </div>
+              </div>
+              <div class="row">
                 <div class="col-md-4 col-lg-2">
-                  <h5>آپلود عکس یا فیلم معرفی</h5>
+                  <h5>آپلود عکس یا فیلم معرفی (jpg,mp4)</h5>
                 </div>
                 <form style="display:-webkit-inline-box" onsubmit="alert(' محتوی شما با موفقیت اضافه شد.')" action="addimgvdo?for=<%= mfu._id %>" method="POST" enctype="multipart/form-data">
                   <div class="col-md-6 col-lg-6">
-                    <input type="file" accept="image/*,video/*" class="form-control-file" name="image_video" id="image_video" required>
+                    <input type="file" accept="image/jpeg,video/mp4" class="form-control-file" name="image_video" id="image_video" required>
                   </div>
                   <button class="btn btn-info" type="submit" >آپلود</button>
                 </form>
@@ -159,6 +170,18 @@
                   </div>
                   <button class="btn btn-info" type="submit" >ثبت</button>
                 </form>
+              </div>
+              <div class="row">
+                <div style="display: inline-grid;" class="col-md-4 col-lg-2">
+                  <p>دسته بندی محصولات</p>
+                  <% for(let i =0 ; i < mfu.productscategory.length; i++) { %>
+                  <li class="checklist" style="list-style: none;"><%= mfu.productscategory[i] %><a href="/removepcatfrommfu?name=<%=mfu.productscategory[i]%>&id=<%=mfu._id%>" class="close">×</a></li>
+                  <% } %>
+                  <form action="/addproductcategory?id=<%= mfu._id %>" method="POST" >
+                    <input name="name" id="name" type="text"> 
+                    <button type="submit" class="btn btn-info">اضافه کردن</button>
+                  </form>
+                </div>
               </div>
               <div class="row">
                 <div class="col-md-4 col-lg-2">

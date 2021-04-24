@@ -75,6 +75,10 @@ li {
     padding-right: 0;
 }
 
+.btn{
+    margin: 5px;
+}
+
 .ps-relative {
     position: relative;
 }

@@ -244,9 +244,10 @@ router.post("/api/signupuser",function(req,res){
     MongoClient.connect(dburl,async function(err,db){
       var dbo=db.db("nahoor");
       var user=new User(req.body.name,req.body.password,req.body.phonenumber,req.body.address);
-      dbo.collection("Users").insertOne(user);
-      res.json({"response":"ok"});
-      res.end();
+      dbo.collection("Users").insertOne(user,function(err,result){
+        res.json({"response":user._id});
+        res.end();
+      });
     })
   }
   else{
@@ -1173,6 +1174,149 @@ router.get("/removemanufacturer",function(req,res){
 })
 
 
+router.post("/changelogo",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id=ObjectID(query.id);
+          dbo.collection("Manufacturers").findOne({_id:id},function(err,mfu){
+            mv(req.files.image.tempFilePath, "public" + mfu.logo, function (err) {
+              res.redirect("/adminpanel/manufacturers/"+mfu._id)
+            })
+          })
+        }
+      })
+    })
+  }
+})
+
+router.get("/removecatfrommfu",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id=ObjectID(query.id);
+          dbo.collection("Manufacturers").updateOne({_id:id},{$pull:{categories:query.name}});
+          res.redirect("/adminpanel/manufacturers/"+id)
+        }
+      })
+    })
+  }
+})
+
+router.get("/removepcatfrommfu",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id=ObjectID(query.id);
+          dbo.collection("Manufacturers").updateOne({_id:id},{$pull:{productscategory:query.name}});
+          res.redirect("/adminpanel/manufacturers/"+id)
+        }
+      })
+    })
+  }
+})
+
+router.post("/addproductcategory",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id=ObjectID(query.id);
+          dbo.collection("Manufacturers").updateOne({_id:id},{$addToSet:{productscategory:req.body.name}})
+          res.redirect("/adminpanel/manufacturers/"+id)
+        }
+      })
+    })
+  }
+})
+
+router.get("/editinfo",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id=ObjectID(query.id);
+          dbo.collection("Manufacturers").findOne({_id:id},function(err,mfu){
+            res.render("AdminPanel/editinfo.ejs",{mfu:mfu});
+            res.end();
+          })
+        }
+      })
+    })
+  }
+})
+
+router.post("/editinfo",function(req,res){
+  var query=url.parse(req.url,true).query;
+  if (req.cookies.admintoken == undefined) {
+    res.redirect("noaccess")
+  }
+  else {
+    MongoClient.connect(dburl, function (err, db) {
+      var dbo = db.db("nahoor");
+      dbo.collection("Admin").findOne({},async function (err, admin) {
+        if (admin.token != req.cookies.admintoken) {
+          res.redirect("noaccess");
+          db.close();
+        }
+        else {
+          var id=ObjectID(query.id);
+          dbo.collection("Manufacturers").updateOne({_id:id},{$set:{name:req.body.name,phonenumber:req.body.phonenumber,website:req.body.website,email:req.body.email,shortdescription:req.body.shortdescription,description:req.body.description,address:req.body.address}},function(err,result){
+            res.redirect("/adminpanel/manufacturers/"+id);
+          })
+        }
+      })
+    })
+  }
+})
 
 
 
